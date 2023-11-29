@@ -1,0 +1,26 @@
+#Create a table that will store data about employees: first name, last name, date of birth, salary amount, and beginning and end of employment. 
+
+            CREATE TABLE Employees (
+            ID INT AUTO_INCREMENT PRIMARY KEY,
+            Name VARCHAR(255),
+            Last_Name VARCHAR(255),
+            Date_Birth DATE,
+            Salary_Amount DECIMAL (10, 2),
+            Beginning_Employment DATE,
+            End_Employment DATE
+            );
+
+#Create a materialized view showing the currently employed employees (first name, last name and salary amount). 
+
+            CREATE MATERIALIZED VIEW Employed_Employees AS
+            SELECT Name, Last_Name, Salary_Amount
+            FROM Employees
+            WHERE Beginning_Employment <= CURDATE() AND (End_Employment IS NULL OR End_Employment >= CURDATE());
+
+
+#View-report showing the number of employees employed in subsequent years.
+
+            SELECT YEAR(Beginning_Employment) AS Number_Years, COUNT(*) AS Number_Employees
+            FROM Employees
+            GROUP BY YEAR(Beginning_Employment)
+            ORDER BY Number_Years;
